@@ -1,33 +1,174 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
       xmlns:p="http://primefaces.org/ui">
-<h:head/>
-<h:body>
-<h:outputLabel value="Hello, world from jsf"/>
-<!--<p:messages id="tarifflist" >-->
-<!--    <br/>-->
-<!--    <ui:repeat value="#{uiBean.getTariffDtoSet()}" var="item">-->
-<!--        <h:outputText value="#{item}"/>-->
-<!--        <br/>-->
-<!--    </ui:repeat>-->
-<!--</p:messages>-->
-    <h:panelGroup id="tarifflist">
-        <ui:repeat value="#{uiBean.tariffDtoSet}" var="item">
-            <div class="tariff">#{item}</div>
-        </ui:repeat>
-    </h:panelGroup>
-    <h:form>
-        <f:websocket channel="push" onmessage="dukeMessageListener()">
-            <f:ajax event="updateNotifications" render=":tarifflist" />
-        </f:websocket>
-    </h:form>
-<!--    <p:poll update="tarifflist" interval="3" />-->
 
-    <h:outputScript library = "js" name = "help.js" />
+<h:head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <!-- Bootstrap CSS -->
+    <h:outputStylesheet library="css" name="bootstrap.css"/>
+    <h:outputStylesheet library="css" name="carousel.css"/>
+
+
+</h:head>
+<h:body>
+
+    <div class="container-fluid">
+        <h:panelGroup id="tarifflist">
+            <div id="myCarousel" class="carousel slide carousel-fade " data-ride="carousel">
+                <div class="carousel-inner min-vh-100">
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <span class="navbar-brand">
+        <h:graphicImage library="images" name="label.jpg" width="30" height="30"
+                        class="d-inline-block align-top" alt=""/>
+        eCare
+    </span>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent"
+                                aria-controls="navbarSupportedContent" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+
+                    </nav>
+
+                    <c:forEach items="#{uiBean.tariffDtoSet}" var="tariff" varStatus="numberOftariff">
+
+                        <c:choose>
+                            <c:when test="#{numberOftariff.index==0}">
+                                <div class="carousel-item active" style="margin-top: 150px">
+                                    <div class="mask flex-center ">
+                                        <div class="container">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-7 col-12 order-md-1 order-2">
+                                                    <h4>#{tariff.tariff} </h4>
+                                                    <h4>#{tariff.price}$ per month</h4>
+                                                    <ui:repeat value="#{tariff.options}" var="option">
+                                                        <p>#{option.name}
+                                                            <br/>
+                                                            Price: #{option.price}$ <br/>
+                                                        </p>
+                                                    </ui:repeat>
+                                                    <a href="http://localhost:8080/" >Connect</a></div>
+                                                <c:choose>
+                                                    <c:when test="#{tariff.price.doubleValue()==uiBean.minPrice}">
+                                                        <div class="col-md-5 col-12 order-md-2 order-1">
+                                                        <h:graphicImage library="images" name="hot_price.png"
+                                                                        styleClass="mx-auto" alt="slide"/>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:when test="#{tariff.options.size()==uiBean.amountOfOptions}">
+                                                        <div class="col-md-5 col-12 order-md-2 order-1">
+                                                        <h:graphicImage library="images" name="bestChoice.png"
+                                                                        styleClass="mx-auto" alt="slide"/>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="col-md-5 col-12 order-md-2 order-1">
+                                                        <h:graphicImage library="images" name="connect.png"
+                                                                        styleClass="mx-auto" alt="slide"/>
+                                                        </div>
+                                                    </c:otherwise>
+
+                                                </c:choose>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="carousel-item" style="margin-top: 150px">
+                                    <div class="mask flex-center">
+                                        <div class="container">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-7 col-12 order-md-1 order-2">
+                                                    <h4>#{tariff.tariff} </h4>
+                                                    <h4>#{tariff.price}$ per month</h4>
+
+                                                    <ui:repeat value="#{tariff.options}" var="option">
+                                                        <p>#{option.name}
+                                                            <br/>
+                                                            Price: #{option.price}$ <br/>
+                                                        </p>
+                                                    </ui:repeat>
+                                                    <a href="http://localhost:8080/" >Connect</a></div>
+                                                <c:choose>
+                                                    <c:when test="#{tariff.price.doubleValue()==uiBean.minPrice}">
+                                                        <div class="col-md-5 col-12 order-md-2 order-1">
+                                                            <h:graphicImage library="images" name="hot_price.png"
+                                                                            styleClass="mx-auto" alt="slide"/>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:when test="#{tariff.options.size()==uiBean.amountOfOptions}">
+                                                        <div class="col-md-5 col-12 order-md-2 order-1">
+                                                            <h:graphicImage library="images" name="bestChoice.png"
+                                                                            styleClass="mx-auto" alt="slide"/>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="col-md-5 col-12 order-md-2 order-1">
+                                                            <h:graphicImage library="images" name="connect.png"
+                                                                            styleClass="mx-auto" alt="slide"/>
+                                                        </div>
+                                                    </c:otherwise>
+
+                                                </c:choose>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </c:forEach>
+
+                    <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev"> <span
+                            class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+                            class="sr-only">Previous</span>
+                    </a> <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next"> <span
+                        class="carousel-control-next-icon" aria-hidden="true"></span> <span class="sr-only">Next</span>
+                </a>
+
+                </div>
+            </div>
+        </h:panelGroup>
+
+
+    </div>
+
+
+    <f:websocket channel="listener" onopen="start" onclose="close" onmessage="updatetariffs"   connected="true">
+        <h:form>
+            <h:commandScript name="updatetariffs" render="tarifflist"/>
+            <h:commandScript name="start" action="#{uiBean.startListener}"/>
+            <h:commandScript name="close" action="#{uiBean.closeListener}"/>
+        </h:form>
+
+    </f:websocket>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <h:outputScript name="js/bootstrap.js"/>
+
+
+
+
+
+
 </h:body>
+
 </html>

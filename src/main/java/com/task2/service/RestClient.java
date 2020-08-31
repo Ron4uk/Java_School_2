@@ -10,6 +10,8 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.task2.dto.TariffDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.annotation.PostConstruct;
@@ -19,43 +21,37 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ws.rs.core.MediaType;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Singleton
 public class RestClient {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestClient.class);
 
 
-    public  Set<TariffDto> getTariffs() {
-        System.out.println("START getTariffs");
+    public Set<TariffDto> getTariffs() {
+        LOGGER.info("[{}] [{}] getTariffs", LocalDateTime.now(), LOGGER.getName());
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(clientConfig);
         WebResource webResource = client.resource("http://localhost:8080/tariff");
-        Builder builder = webResource.accept(MediaType.APPLICATION_JSON) //
+        Builder builder = webResource.accept(MediaType.APPLICATION_JSON)
                 .header("content-type", MediaType.APPLICATION_JSON);
-
         ClientResponse response = builder.get(ClientResponse.class);
 
-
         if (response.getStatus() != 200) {
-            System.out.println("Failed with HTTP Error code: " + response.getStatus());
             String error = response.getEntity(String.class);
-            System.out.println("Error: " + error);
+            LOGGER.error("[{}] [{}] error response status : {}", LocalDateTime.now(), LOGGER.getName(), response.getStatus());
+            LOGGER.error("[{}] [{}] error getTariffs : {}", LocalDateTime.now(), LOGGER.getName(), error);
             return null;
+
         }
 
         GenericType<Set<TariffDto>> generic = new GenericType<Set<TariffDto>>() {
         };
         Set<TariffDto> tariffDtoList = response.getEntity(generic);
+        LOGGER.info("[{}] [{}] getTariffs from rest request: {}", LocalDateTime.now(), LOGGER.getName(), tariffDtoList);
 
-        System.out.println("Output from Server .... \n");
-
-        for (TariffDto tariffDto : tariffDtoList) {
-            System.out.println(" --- ");
-            System.out.println("tariffDto = " + tariffDto);
-            System.out.println("options = " + tariffDto.getOptions());
-
-        }
         return tariffDtoList;
     }
 }

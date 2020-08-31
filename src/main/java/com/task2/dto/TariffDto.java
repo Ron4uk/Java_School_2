@@ -23,5 +23,12 @@ public class TariffDto implements Serializable {
     @EqualsAndHashCode.Exclude
     private Set<OptionDto> options = new HashSet<>();
 
-
+    public static  int comparePrice (TariffDto t1, TariffDto t2){
+        return t1.getPrice().compareTo(t2.getPrice());
+    }
+    public static  int compareOptions (TariffDto t1, TariffDto t2){
+        if(t1.getOptions().size() > t2.getOptions().size())
+            return 1;
+        return -1;
+    }
 }
