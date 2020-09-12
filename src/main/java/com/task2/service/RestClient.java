@@ -34,7 +34,7 @@ public class RestClient {
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(clientConfig);
-        WebResource webResource = client.resource("http://localhost:8080/tariff");
+        WebResource webResource = client.resource("http://docker.for.win.localhost:8080/tariff");
         Builder builder = webResource.accept(MediaType.APPLICATION_JSON)
                 .header("content-type", MediaType.APPLICATION_JSON);
         ClientResponse response = builder.get(ClientResponse.class);

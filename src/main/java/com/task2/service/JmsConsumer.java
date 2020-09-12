@@ -19,7 +19,7 @@ public class JmsConsumer {
     private MessageConsumer consumer;
 
     public void consume() {
-        String url = "failover:tcp://localhost:61616";
+        String url = "failover:tcp://docker.for.win.localhost:61616";
         ConnectionFactory factory = new ActiveMQConnectionFactory(url);
         try {
             Connection connection = factory.createConnection();
